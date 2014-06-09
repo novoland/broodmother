@@ -1,0 +1,105 @@
+package org.hustsse.spider.handler.crawl.writer;
+
+import java.io.File;
+import java.security.MessageDigest;
+
+import org.hustsse.spider.framework.HandlerContext;
+import org.hustsse.spider.handler.AbstractBeanNameAwareHandler;
+import org.hustsse.spider.model.CrawlURL;
+import org.hustsse.spider.util.CommonUtils;
+
+/**
+ * 简单的文件写出handler，将抓取到的页面输出到"job根目录/{@link #PAGE_REPO}
+ * "下，每个WorkQueue一个目录，目录名为WorkQueue的key。
+ * <p>
+ * <b>注意：</b>没有做过优化，仅供演示用，大数据量下小心硬盘！
+ *
+ * @author Anderson
+ *
+ */
+public class SimpleFileWriter extends AbstractBeanNameAwareHandler {
+	private static final String PAGE_REPO = "pages";
+
+	@Override
+	public void process(HandlerContext ctx, CrawlURL url) {
+        String filePath = genFilePath(ctx, url);
+		CommonUtils.writeToFile(url.getResponse().getContent(), filePath);
+		ctx.proceed();
+	}
+
+    protected String genFilePath(HandlerContext ctx, CrawlURL url) {
+        File jobDir = ctx.getController().getCrawlJob().getJobDir();
+        File pageDir =  new File(jobDir.getAbsolutePath() + File.separator + PAGE_REPO) ;
+        if(!pageDir.exists())
+            pageDir.mkdir();
+        File hostDir = new File(pageDir.getAbsoluteFile() + File.separator + url.getWorkQueueKey().replace(':', '_'));
+        if (!hostDir.exists()) {
+            hostDir.mkdir();
+        }
+        String filePath = hostDir.getAbsolutePath() + File.separator + encodeByMD5(url.getURL().toString()) + ".html";
+        return filePath;
+    }
+
+    private static final String ALGORITHM = "MD5";
+	private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	/**
+	 * encode string
+	 *
+	 * @param algorithm
+	 * @param str
+	 * @return String
+	 */
+	public static String encode(String algorithm, String str) {
+		if (str == null) {
+			return null;
+		}
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+			messageDigest.update(str.getBytes());
+			return getFormattedText(messageDigest.digest());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	/**
+	 * encode By MD5
+	 *
+	 * @param str
+	 * @return String
+	 */
+	public static String encodeByMD5(String str) {
+		if (str == null) {
+			return null;
+		}
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance(ALGORITHM);
+			messageDigest.update(str.getBytes());
+			return getFormattedText(messageDigest.digest());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	/**
+	 * Takes the raw bytes from the digest and formats them correct.
+	 *
+	 * @param bytes
+	 *            the raw bytes from the digest.
+	 * @return the formatted bytes.
+	 */
+	private static String getFormattedText(byte[] bytes) {
+		int len = bytes.length;
+		StringBuilder buf = new StringBuilder(len * 2);
+		// 把密文转换成十六进制的字符串形式
+		for (int j = 0; j < len; j++) {
+			buf.append(HEX_DIGITS[(bytes[j] >> 4) & 0x0f]);
+			buf.append(HEX_DIGITS[bytes[j] & 0x0f]);
+		}
+		return buf.toString();
+	}
+
+}
