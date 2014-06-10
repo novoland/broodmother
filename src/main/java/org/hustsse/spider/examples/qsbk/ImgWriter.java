@@ -1,6 +1,6 @@
 package org.hustsse.spider.examples.qsbk;
 
-import org.hustsse.spider.framework.HandlerContext;
+import org.hustsse.spider.core.HandlerContext;
 import org.hustsse.spider.handler.crawl.writer.SimpleFileWriter;
 import org.hustsse.spider.model.CrawlURL;
 

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hustsse.spider.exception.CrawlJobException;
-import org.hustsse.spider.framework.CrawlController;
+import org.hustsse.spider.core.CrawlController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;

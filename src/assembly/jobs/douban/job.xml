@@ -22,10 +22,10 @@
 		class="org.hustsse.spider.handler.crawl.writer.SimpleFileWriter" />
 
 	<!-- DNS cache / DNS resolver-->
-	<bean id="dnsCache"		class="org.hustsse.spider.dns.DnsCache">
+	<bean id="dnsCache"		class="org.hustsse.spider.handler.crawl.dns.DnsCache">
 		<constructor-arg value="dnsCache" />
 	</bean>
-	<bean id="dnsResolver" class="org.hustsse.spider.handler.crawl.DnsResolver" />
+	<bean id="dnsResolver" class="org.hustsse.spider.handler.crawl.dns.DnsResolver" />
 
 	<bean id="nioFetcher" class="org.hustsse.spider.handler.crawl.fetcher.nio.NioFetcher">
     <!--<constructor-arg value="20" />-->
@@ -43,7 +43,7 @@
 	</bean>
 
 	<!-- candidate Pipeline -->
-	<bean id="candidatePipeline" class="org.hustsse.spider.framework.DefaultPipeline" scope="prototype">
+	<bean id="candidatePipeline" class="org.hustsse.spider.core.DefaultPipeline" scope="prototype">
 		<constructor-arg>
 			<ref bean="candidateSink" />
 		</constructor-arg>
@@ -58,8 +58,8 @@
 
 	<bean id="candidateSink" class="org.hustsse.spider.sink.DefaultCandidatePipelineSink"/>
 
-	<bean id="discardHttpsRule" class="org.hustsse.spider.deciderules.impl.DiscardHttpsRule"/>
-	<bean id="ruleSequence" class="org.hustsse.spider.deciderules.DecideRuleSequence">
+	<bean id="discardHttpsRule" class="org.hustsse.spider.handler.candidate.filter.deciderule.DiscardHttpsRule"/>
+	<bean id="ruleSequence" class="org.hustsse.spider.handler.candidate.filter.deciderule.DecideRuleSequence">
 		<property name="rules">
 			<list>
 				<ref bean="discardHttpsRule"/>
@@ -71,11 +71,11 @@
 	</bean>
 
 	<!-- canonical policy/url precedence policy/queue assgin policy : use default! -->
-	<bean id="frontierPreparer" class="org.hustsse.spider.handler.candidate.FrontierPreparer"/>
+	<bean id="frontierPreparer" class="org.hustsse.spider.handler.candidate.preparer.FrontierPreparer"/>
 
 
 	<!-- crawlurl Pipeline -->
-	<bean id="crawlPipeline" class="org.hustsse.spider.framework.DefaultPipeline" scope="prototype">
+	<bean id="crawlPipeline" class="org.hustsse.spider.core.DefaultPipeline" scope="prototype">
 		<constructor-arg>
 			<ref bean="crawlUrlSink" />
 		</constructor-arg>
@@ -93,9 +93,9 @@
 	</bean>
 
 	<!-- Frontier -->
-	<bean class="org.hustsse.spider.framework.Frontier" />
+	<bean class="org.hustsse.spider.core.Frontier" />
 	<!-- Url unique filter -->
-	<bean class="org.hustsse.spider.filter.BloomFilterUrlUniqFilter"/>
+	<bean class="org.hustsse.spider.uniquefilter.BloomFilterUrlUniqFilter"/>
 
 	<!--<bean class="org.hustsse.spider.workqueue.RedisWorkQueueFactory">-->
 		<!--<property name="configFile" value="classpath:redis.properties"/>-->
@@ -106,7 +106,7 @@
     </bean>
 
 	<!-- CrawlController配置 -->
-	<bean class="org.hustsse.spider.framework.CrawlController">
+	<bean class="org.hustsse.spider.core.CrawlController">
 		<property name="crawlThreadNum" value="1" />
 		<!--<property name="crawlThreadPool" ref="crawlThreadPool" />-->
 		<!-- 只有CrawlURL的Pipeline是注入到CrawlController中的，Candidate Pipeline是注入到Handler中的 -->

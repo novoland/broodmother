@@ -2,8 +2,8 @@ package org.hustsse.spider.handler.candidate;
 
 import java.util.List;
 
-import org.hustsse.spider.framework.HandlerContext;
-import org.hustsse.spider.framework.Pipeline;
+import org.hustsse.spider.core.HandlerContext;
+import org.hustsse.spider.core.Pipeline;
 import org.hustsse.spider.handler.AbstractBeanNameAwareHandler;
 import org.hustsse.spider.model.CrawlURL;
 import org.springframework.beans.BeansException;

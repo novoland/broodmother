@@ -1,6 +1,6 @@
 package org.hustsse.spider.workqueue;
 
-import org.hustsse.spider.framework.WorkQueue;
+import org.hustsse.spider.core.WorkQueue;
 
 /**
  * WorkQueue的抽象实现，提供了大部分具体实现可以共用的Key、上次入队时间、Politeness间隔、元素上限相关逻辑。

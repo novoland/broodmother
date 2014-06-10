@@ -1,8 +1,8 @@
 package org.hustsse.spider.sink;
 
 import org.hustsse.spider.exception.PipelineException;
-import org.hustsse.spider.framework.Frontier;
-import org.hustsse.spider.framework.PipelineSink;
+import org.hustsse.spider.core.Frontier;
+import org.hustsse.spider.core.PipelineSink;
 import org.hustsse.spider.model.CrawlURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

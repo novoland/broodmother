@@ -63,7 +63,7 @@
 		</filter>
 	</appender>
 
-	<logger name="org.hustsse.spider.framework.Frontier" level="DEBUG" additivity="false">
+	<logger name="org.hustsse.spider.core.Frontier" level="DEBUG" additivity="false">
 		<appender-ref ref="FrontierLogger" />
 	</logger>
 

@@ -1,7 +1,7 @@
 package org.hustsse.spider.workqueue.factory;
 
-import org.hustsse.spider.framework.WorkQueue;
-import org.hustsse.spider.framework.WorkQueueFactory;
+import org.hustsse.spider.core.WorkQueue;
+import org.hustsse.spider.core.WorkQueueFactory;
 import org.hustsse.spider.workqueue.MemWorkQueue;
 
 /**

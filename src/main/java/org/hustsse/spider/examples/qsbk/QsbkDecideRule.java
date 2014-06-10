@@ -1,7 +1,7 @@
 package org.hustsse.spider.examples.qsbk;
 
-import org.hustsse.spider.deciderules.DecideResult;
-import org.hustsse.spider.deciderules.impl.SimpleHostRule;
+import org.hustsse.spider.handler.candidate.filter.DecideResult;
+import org.hustsse.spider.handler.candidate.filter.deciderule.SimpleHostRule;
 import org.hustsse.spider.model.CrawlURL;
 
 /**

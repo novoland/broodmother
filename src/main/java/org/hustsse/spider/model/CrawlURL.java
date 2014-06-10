@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hustsse.spider.dns.Dns;
-import org.hustsse.spider.framework.Pipeline;
+import org.hustsse.spider.handler.crawl.dns.Dns;
+import org.hustsse.spider.core.Pipeline;
 import org.hustsse.spider.util.httpcodec.HttpResponse;
 
 import com.fasterxml.jackson.annotation.JsonCreator;

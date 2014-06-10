@@ -107,8 +107,8 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.hustsse.spider.framework.JobScanner</mainClass>
-              <packageName>org.hustsse.spider.framework</packageName>
+              <mainClass>org.hustsse.spider.core.JobScanner</mainClass>
+              <packageName>org.hustsse.spider.core</packageName>
               <addClasspath>true</addClasspath>
               <addExtensions />
             </manifest>

@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.hustsse.spider.exception.ReactorException;
-import org.hustsse.spider.framework.DefaultPipeline;
+import org.hustsse.spider.core.DefaultPipeline;
 import org.hustsse.spider.model.CrawlURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

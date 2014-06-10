@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hustsse.spider.framework.WorkQueue;
-import org.hustsse.spider.framework.WorkQueueFactory;
+import org.hustsse.spider.core.WorkQueue;
+import org.hustsse.spider.core.WorkQueueFactory;
 import org.hustsse.spider.workqueue.RedisWorkQueue;
 import org.springframework.core.io.Resource;
 

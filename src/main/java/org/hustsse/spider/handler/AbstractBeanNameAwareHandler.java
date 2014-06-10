@@ -1,6 +1,6 @@
 package org.hustsse.spider.handler;
 
-import org.hustsse.spider.framework.Handler;
+import org.hustsse.spider.core.Handler;
 import org.springframework.beans.factory.BeanNameAware;
 
 /**

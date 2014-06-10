@@ -1,7 +1,7 @@
 package org.hustsse.spider.handler.crawl.fetcher.nio;
 
 import org.hustsse.spider.exception.BossException;
-import org.hustsse.spider.framework.Pipeline;
+import org.hustsse.spider.core.Pipeline;
 import org.hustsse.spider.model.CrawlURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

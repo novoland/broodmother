@@ -19,15 +19,13 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.hustsse.spider.framework.HandlerContext;
+import org.hustsse.spider.core.HandlerContext;
 import org.hustsse.spider.handler.crawl.fetcher.AbstractFetcher;
 import org.hustsse.spider.model.CrawlURL;
 import org.hustsse.spider.util.HttpMessageUtil;

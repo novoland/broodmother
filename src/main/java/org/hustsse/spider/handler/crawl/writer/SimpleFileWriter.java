@@ -3,7 +3,7 @@ package org.hustsse.spider.handler.crawl.writer;
 import java.io.File;
 import java.security.MessageDigest;
 
-import org.hustsse.spider.framework.HandlerContext;
+import org.hustsse.spider.core.HandlerContext;
 import org.hustsse.spider.handler.AbstractBeanNameAwareHandler;
 import org.hustsse.spider.model.CrawlURL;
 import org.hustsse.spider.util.CommonUtils;

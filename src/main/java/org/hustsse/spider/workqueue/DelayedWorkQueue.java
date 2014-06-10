@@ -4,7 +4,7 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-import org.hustsse.spider.framework.WorkQueue;
+import org.hustsse.spider.core.WorkQueue;
 
 /**
  * WorkQueue的Wrapper，含有Delay信息，配合{@link DelayQueue}使用实现WorkQueue的Politeness
