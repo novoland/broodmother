@@ -1,15 +1,16 @@
-package org.hustsse.spider.workqueue.factory;
+package org.hustsse.spider.workqueuefactory.impl;
 
 import org.hustsse.spider.core.WorkQueue;
 import org.hustsse.spider.core.WorkQueueFactory;
-import org.hustsse.spider.workqueue.MemWorkQueue;
+import org.hustsse.spider.workqueue.impl.MemWorkQueue;
+import org.hustsse.spider.workqueuefactory.AbstractWorkQueueFactory;
 
 /**
  * MemWorkQueue的工厂，负责创建{@link MemWorkQueue}。
  * @author Anderson
  *
  */
-public class MemWorkQueueFactory implements WorkQueueFactory {
+public class MemWorkQueueFactory extends AbstractWorkQueueFactory {
 	/** 产品的元素上限，创建的MemWorkQueue最大长度都是一样的 */
 	private int maxLengthPerWorkQueue;
 
@@ -22,7 +23,7 @@ public class MemWorkQueueFactory implements WorkQueueFactory {
 	}
 
 	@Override
-	public WorkQueue createWorkQueueFor(String workQueueKey) {
+	public WorkQueue createWorkQueueInner(String workQueueKey) {
 		return new MemWorkQueue(workQueueKey, maxLengthPerWorkQueue);
 	}
 

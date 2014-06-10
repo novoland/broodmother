@@ -1,4 +1,4 @@
-package org.hustsse.spider.workqueue.factory;
+package org.hustsse.spider.workqueuefactory.impl;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -6,7 +6,8 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.hustsse.spider.core.WorkQueue;
 import org.hustsse.spider.core.WorkQueueFactory;
-import org.hustsse.spider.workqueue.RedisWorkQueue;
+import org.hustsse.spider.workqueue.impl.RedisWorkQueue;
+import org.hustsse.spider.workqueuefactory.AbstractWorkQueueFactory;
 import org.springframework.core.io.Resource;
 
 import redis.clients.jedis.JedisPool;
@@ -20,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Anderson
  *
  */
-public class RedisWorkQueueFactory implements WorkQueueFactory {
+public class RedisWorkQueueFactory extends AbstractWorkQueueFactory{
 	/** Jackson ObjectMapper，所有WorkQueue共用一个。 */
 	private static ObjectMapper jackson = new ObjectMapper();
 	/** Jedis连接池，所有WorkQueue共用一个，Lazy Init方式。 */
@@ -61,7 +62,7 @@ public class RedisWorkQueueFactory implements WorkQueueFactory {
 	}
 
 	@Override
-	public WorkQueue createWorkQueueFor(String workQueueKey) {
+	public WorkQueue createWorkQueueInner(String workQueueKey) {
 		// double check for the pool singleton
 		if (jedisPool == null) {
 			synchronized (this) {

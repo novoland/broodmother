@@ -49,14 +49,14 @@ public interface WorkQueue {
 	boolean isEmpty();
 
 	/**
-	 * 得到上次URL出队时间，单位nanoSecond
+	 * 得到上次URL出队时间，单位ms
 	 *
 	 * @return
 	 */
 	long getLastDequeueTime();
 
 	/**
-	 * 设置上次URL出队时间，单位nanoSecond
+	 * 设置上次URL出队时间，单位ms
 	 *
 	 * @param lastDequeueTime
 	 *            上次URL出队时间

@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.hustsse.spider.handler.candidate.preparer.FrontierPreparer;
 import org.hustsse.spider.model.CrawlURL;
-import org.hustsse.spider.workqueue.DelayedWorkQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class Frontier {
 	FrontierPreparer frontierPreparer;
 	@Autowired
 	WorkQueueFactory workQueueFactory;
-
+	
 	AtomicLong ordinal = new AtomicLong(0); // url被scheduled in的序号
 
 	Set<String> readyQueues = Collections.newSetFromMap(new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(
@@ -120,8 +119,8 @@ public class Frontier {
 			}
 			controller.createCrawlPipeline().attachTo(url);
 
-			long now = System.nanoTime();
-			logger.debug("wq:" + wq.getKey() + "出队，距上次url消费时间(ms)：" + (now - wq.getLastDequeueTime()) / (1000 * 1000));
+			long now = System.currentTimeMillis();
+			logger.debug("wq:" + wq.getKey() + "出队，距上次url消费时间(ms)：" + (now - wq.getLastDequeueTime()));
 			wq.setLastDequeueTime(now);
 			// 从wq中拿了url后，因为它是ready状态的，应该重新入readyQueues队列。
 			// 我们使用了ConcurrentLinkedQueue这个实现，所以对所有就绪workqueue的
@@ -145,13 +144,13 @@ public class Frontier {
 	private boolean snoozeIfNecessary(WorkQueue wq) {
 		// handle politeness snooze
 		long lastDequeueTime = wq.getLastDequeueTime();
-		long now = System.nanoTime();
+		long now = System.currentTimeMillis();
 		long timeElapsed = now - lastDequeueTime;
 		long politenessInterval = wq.getPolitenessInterval();
 		// 距离上次取url过去的时间比politeness间隔短，需要休眠一会儿
-		if (timeElapsed < politenessInterval) {
+		if (politenessInterval > 0 && timeElapsed < politenessInterval) {
 			long sleepTime = politenessInterval - timeElapsed;
-			logger.debug("snooze wq:" + wq.getKey() + ", duration(ms): " + sleepTime / (1000 * 1000));
+			logger.debug("snooze wq:" + wq.getKey() + ", duration(ms): " + sleepTime);
 			DelayedWorkQueue dwq = new DelayedWorkQueue(wq, sleepTime);
 			snoozedQueues.add(wq.getKey());
 			snoozedDelayedQueues.add(dwq);
@@ -221,8 +220,6 @@ public class Frontier {
 //		}
 		wqNum.incrementAndGet();
 		WorkQueue wq = workQueueFactory.createWorkQueueFor(key);
-		// TODO politeness interval，先定死5秒，移入WorkqueueFactory中？抽象出一个Policy来？
-		wq.setPolitenessInterval(5L * 1000 * 1000 * 1000);
 		return wq;
 	}
 

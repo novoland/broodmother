@@ -15,8 +15,8 @@
 	<bean id="crawlUrlSink" class="org.hustsse.spider.sink.DefaultCrawlPipelineSink" />
 
 	<bean id="qsbkImgWriter" class="org.hustsse.spider.examples.qsbk.ImgWriter">
-        <property name="baseImgDir" value="/home/anderson/qsbk"/>
-        <property name="maxImgNum" value="200"/>
+        <property name="baseImgDir" value="D:/qsbk"/>
+        <property name="maxImgNum" value="2000"/>
         <property name="tumblrImgUrlPattern" value="http://.*tumblr\.com/.*(jpg|png|gif)"/>
         <property name="viaUrlPatterns">
             <list>
@@ -77,7 +77,7 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="candidateFilter" class="org.hustsse.spider.handler.candidate.CandidateFilter">
+	<bean id="candidateFilter" class="org.hustsse.spider.handler.candidate.filter.CandidateFilter">
 		<property name="rule" ref="ruleSequence"/>
 	</bean>
 
@@ -125,12 +125,16 @@
 	<!-- Url unique filter -->
 	<bean class="org.hustsse.spider.uniquefilter.BloomFilterUrlUniqFilter"/>
 
-	<!--<bean class="org.hustsse.spider.workqueue.RedisWorkQueueFactory">-->
+	<!--<bean class="org.hustsse.spider.workqueue.impl.RedisWorkQueueFactory">-->
 		<!--<property name="configFile" value="classpath:redis.properties"/>-->
 	<!--</bean>-->
 
-    <bean class="org.hustsse.spider.workqueue.factory.MemWorkQueueFactory">
-        <property name="maxLengthPerWorkQueue" value="-1"/>
+	<bean id="constantPolitenessPolicy" class="org.hustsse.spider.workqueuefactory.policy.politeness.ConstantPolitenessPolicy">
+        <property name="defaultPoliteness" value="0"/>
+	</bean>
+    <bean class="org.hustsse.spider.workqueuefactory.impl.MemWorkQueueFactory">
+        <property name="maxLengthPerWorkQueue" value="20000"/>
+        <property name="politenessPolicy" ref="constantPolitenessPolicy"/>
     </bean>
 
 	<!-- CrawlController配置 -->

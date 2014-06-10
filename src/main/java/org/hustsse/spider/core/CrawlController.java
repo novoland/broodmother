@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.hustsse.spider.exception.CrawlControllerException;
 import org.hustsse.spider.exception.OverFlowException;
@@ -124,7 +125,7 @@ public class CrawlController implements ApplicationContextAware {
 
 				if (uriToCrawl == null) {
 					try {
-						Thread.sleep(10);
+						TimeUnit.MILLISECONDS.sleep(10);
 					} catch (InterruptedException e) {
 					}
 					continue;
