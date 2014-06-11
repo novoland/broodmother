@@ -18,25 +18,26 @@ import org.hustsse.spider.workqueue.AbstractWorkQueue;
  */
 public class MemWorkQueue extends AbstractWorkQueue {
 
-	/** 内部容器的初始长度 */
-	private static final int DEFAULT_INITIAL_CAPACITY = 1000;
-
 	/** 内部容器 */
-	Queue<CrawlURL> urls  = new PriorityBlockingQueue<CrawlURL>(DEFAULT_INITIAL_CAPACITY,new Comparator<CrawlURL>() {
-        @Override
-        public int compare(CrawlURL o1, CrawlURL o2) {
-            // 优先级相等时按入frontier顺序排序
-            if (o1.getPriority() == o2.getPriority())
-                return o1.getOrdinal() > o2.getOrdinal()?  -1 : 1;
-
-            return o1.getPriority() > o2.getPriority()? -1 : 1;
-        }
-    });
+	Queue<CrawlURL> urls;
 	/** 元素数目 */
 	protected AtomicLong count = new AtomicLong(0);
 
 	public MemWorkQueue(String key, int maxLength) {
-		super(key,(long)maxLength);
+		super(key,maxLength);
+
+        urls = new PriorityBlockingQueue<CrawlURL>(
+                maxLength > 0?maxLength:Integer.MAX_VALUE,
+                new Comparator<CrawlURL>() {
+            @Override
+            public int compare(CrawlURL o1, CrawlURL o2) {
+                // 优先级相等时按入frontier顺序排序
+                if (o1.getPriority() == o2.getPriority())
+                    return o1.getOrdinal() > o2.getOrdinal()?  -1 : 1;
+
+                return o1.getPriority() > o2.getPriority()? -1 : 1;
+            }
+        });
 	}
 
 	@Override
@@ -65,6 +66,12 @@ public class MemWorkQueue extends AbstractWorkQueue {
 	public CrawlURL dequeue() {
 		CrawlURL u = urls.poll();
 		if (u != null){
+            // unbound queue
+            if(maxLength <= 0){
+                count.decrementAndGet();
+                return u;
+            }
+            // bounded queue
 			synchronized (urls) {
 				count.decrementAndGet();
 				urls.notifyAll();
@@ -74,15 +81,7 @@ public class MemWorkQueue extends AbstractWorkQueue {
 	}
 
 	@Override
-	public void setMaxLength(long maxLength) {
-		if(Integer.MAX_VALUE < maxLength)
-			this.maxLength = Integer.MAX_VALUE;
-		else
-			this.maxLength = (int) maxLength;
-	}
-
-	@Override
-	public long count() {
+	public int count() {
 		return count.intValue();
 	}
 

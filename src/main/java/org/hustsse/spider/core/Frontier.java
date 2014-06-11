@@ -33,11 +33,11 @@ public class Frontier {
 	
 	AtomicLong ordinal = new AtomicLong(0); // url被scheduled in的序号
 
-	Set<String> readyQueues = Collections.newSetFromMap(new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(
-			MAX_WQS).build());
 	// 不能用队列的原因：schedule时会向readyQueues添加key，可能与现有的重复
 	Map<String, WorkQueue> allQueues = new ConcurrentHashMap<String, WorkQueue>();
-	Set<String> emptyQueues = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>()); // j.u.c没有提供ConcurrentHashSet，用这种折中的方式
+    Set<String> readyQueues = Collections.newSetFromMap(new ConcurrentLinkedHashMap.Builder<String, Boolean>().maximumWeightedCapacity(
+            MAX_WQS).build());
+    Set<String> emptyQueues = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>()); // j.u.c没有提供ConcurrentHashSet，用这种折中的方式
 	Set<String> snoozedQueues = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
 	DelayQueue<DelayedWorkQueue> snoozedDelayedQueues = new DelayQueue<DelayedWorkQueue>();
@@ -93,7 +93,7 @@ public class Frontier {
 					logger.error("key " + key + " 在readyQueues中但不在allQueues中！");
 					continue;
 				}
-				// redy queue是个空的，将它放到emptyQueues中，继续查看下个ready queue
+				// ready queue是个空的，将它放到emptyQueues中，继续查看下个ready queue
 				if (wq.isEmpty()) {
 					emptyQueues.add(key);
 					continue;
@@ -125,7 +125,8 @@ public class Frontier {
 			// 从wq中拿了url后，因为它是ready状态的，应该重新入readyQueues队列。
 			// 我们使用了ConcurrentLinkedQueue这个实现，所以对所有就绪workqueue的
 			// 调度实际上是round-robin轮转方式。
-			// 需要对workQueue增加优先级特性吗？
+
+			// 如果需要对workQueue增加优先级特性，需要用一个priorityQueue
 			readyQueues.add(key);
 			return url;
 		}
@@ -142,13 +143,16 @@ public class Frontier {
 	}
 
 	private boolean snoozeIfNecessary(WorkQueue wq) {
+        long politenessInterval = wq.getPolitenessInterval();
+        if(politenessInterval <= 0){
+            return false;
+        }
 		// handle politeness snooze
 		long lastDequeueTime = wq.getLastDequeueTime();
 		long now = System.currentTimeMillis();
 		long timeElapsed = now - lastDequeueTime;
-		long politenessInterval = wq.getPolitenessInterval();
 		// 距离上次取url过去的时间比politeness间隔短，需要休眠一会儿
-		if (politenessInterval > 0 && timeElapsed < politenessInterval) {
+		if (timeElapsed < politenessInterval) {
 			long sleepTime = politenessInterval - timeElapsed;
 			logger.debug("snooze wq:" + wq.getKey() + ", duration(ms): " + sleepTime);
 			DelayedWorkQueue dwq = new DelayedWorkQueue(wq, sleepTime);
@@ -183,9 +187,7 @@ public class Frontier {
 			wq = allQueues.get(key);
 		} else {
 			wq = createWorkQueueFor(key);
-			if (wq == null) { // TODO WQ数量上限的实现方式有待考虑，先用个简单方式
-				return;
-			}
+		    // TODO WQ数量上限的实现方式有待考虑，先不考虑
 			allQueues.put(key, wq);
 		}
 
@@ -215,9 +217,6 @@ public class Frontier {
 	private AtomicInteger wqNum = new AtomicInteger(0);
 
 	private WorkQueue createWorkQueueFor(String key) {
-//		if (wqNum.intValue() >= MAX_WQS) {
-//			return null;
-//		}
 		wqNum.incrementAndGet();
 		WorkQueue wq = workQueueFactory.createWorkQueueFor(key);
 		return wq;

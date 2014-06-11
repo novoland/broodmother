@@ -151,12 +151,12 @@ public class RedisWorkQueue extends AbstractWorkQueue {
 	}
 
 	@Override
-	public long count() {
+	public int count() {
 		Jedis con = null;
 		try {
 			con = getConnection();
 			try {
-				Long count = con.zcard(getSerializedKey());
+				Integer count = con.zcard(getSerializedKey()).intValue();
 				return count;
 			} catch (Exception e) {
 				jedisPool.returnBrokenResource(con);

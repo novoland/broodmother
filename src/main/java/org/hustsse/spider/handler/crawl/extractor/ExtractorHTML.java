@@ -55,6 +55,8 @@ public class ExtractorHTML extends AbstractBeanNameAwareHandler {
         if(extractImg)
             extractCandidate(doc,"img","src",crawlUrl);
 
+        customExtractCandidate(doc,crawlUrl);
+
         ctx.proceed();
 	}
 
@@ -71,6 +73,11 @@ public class ExtractorHTML extends AbstractBeanNameAwareHandler {
                 // not a legal url , ignore
             }
         }
+    }
+
+    // to be override by child class
+    protected void customExtractCandidate(Document doc,CrawlURL url){
+
     }
 
     public boolean isExtractFrame() {

@@ -84,21 +84,21 @@ public interface WorkQueue {
 	 *
 	 * @return
 	 */
-	long count();
+	int count();
 
 	/**
 	 * 得到WorkQueue的元素上限
 	 *
 	 * @return
 	 */
-	long getMaxLength();
+	int getMaxLength();
 
 	/**
 	 * 设置元素上限，当到达元素上限时入队失败。
 	 *
 	 * @param maxLength <=0时表示没有限制; <当前元素个数时依然起作用
 	 */
-	void setMaxLength(long maxLength);
+	void setMaxLength(int maxLength);
 
 	// void setDiscardedUrlHandler() 超过max时的处理器
 

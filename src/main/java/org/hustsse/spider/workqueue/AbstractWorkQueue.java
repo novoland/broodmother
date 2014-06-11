@@ -13,9 +13,9 @@ public abstract class AbstractWorkQueue implements WorkQueue {
 	protected long lastDequeueTime;
 	protected long politenessInterval;
 	/** 最大可容纳的元素个数，默认无限制 */
-	protected long maxLength = -1;
+	protected int maxLength = -1;
 
-	public AbstractWorkQueue(String key, long maxLength) {
+	public AbstractWorkQueue(String key, int maxLength) {
 		this.workQueueKey = key;
 		this.maxLength = maxLength;
 	}
@@ -50,12 +50,12 @@ public abstract class AbstractWorkQueue implements WorkQueue {
 	}
 
 	@Override
-	public long getMaxLength() {
+	public int getMaxLength() {
 		return maxLength;
 	}
 
 	@Override
-	public void setMaxLength(long maxLength) {
+	public void setMaxLength(int maxLength) {
 		this.maxLength = maxLength;
 	}
 
