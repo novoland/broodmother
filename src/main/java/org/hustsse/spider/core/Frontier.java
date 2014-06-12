@@ -42,16 +42,14 @@ public class Frontier {
 
 	DelayQueue<DelayedWorkQueue> snoozedDelayedQueues = new DelayQueue<DelayedWorkQueue>();
 
-	public Frontier() {
-		startWakeThread();
-	}
+	public Frontier() {}
 
 	Thread wakeSnoozedThread;
 
 	class WakeThread implements Runnable {
 		@Override
 		public void run() {
-			while (true) {
+			while (!controller.stopped()) {
 				try {
 					DelayedWorkQueue waked = snoozedDelayedQueues.take();
 					WorkQueue wq = waked.getWorkQueue();
@@ -231,4 +229,12 @@ public class Frontier {
 		}
     }
 
+    public CrawlController getController() {
+        return controller;
+    }
+
+    public void setController(CrawlController controller) {
+        this.controller = controller;
+        startWakeThread();
+    }
 }
