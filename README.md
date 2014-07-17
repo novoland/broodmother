@@ -13,7 +13,7 @@ broodmother
                 \      /
 ```
 
-A web crawler.
+A (toy) web crawler.
 
 # Build
 在根目录下:
